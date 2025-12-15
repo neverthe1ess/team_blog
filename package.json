@@ -1,0 +1,23 @@
+{
+  "name": "learning-board-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.1.0"
+  },
+  "devDependencies": {
+    "prisma": "^7.1.0",
+    "turbo": "^2.6.3"
+  },
+  "packageManager": "npm@10.2.4"
+}
