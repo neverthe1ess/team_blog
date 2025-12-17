@@ -1,5 +1,6 @@
 "use client"
 
+import { apiFetch } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -13,7 +14,7 @@ export default function SignupPage(){
         e.preventDefault();
 
         try{
-            const response = await fetch("http://localhost:3000/users", {
+            const response = await apiFetch("http://localhost:3000/users", {
                 method: "POST",
                 headers: {"Content-Type" : "application/json"},
                 body: JSON.stringify({email, password, nickname})

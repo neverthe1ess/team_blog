@@ -21,18 +21,30 @@ export class PostsService {
   async findAll(page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
 
-    return this.prisma.post.findMany({
-      skip: skip,
-      take: limit,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        author: {
-          select: { email: true, nickname: true },
+    const [data, total] = await Promise.all([
+      this.prisma.post.findMany({
+        skip: skip,
+        take: limit,
+        orderBy: {
+          createdAt: 'desc',
         },
+        include: {
+          author: {
+            select: { email: true, nickname: true },
+          },
+        },
+      }),
+      this.prisma.post.count(),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        lastPage: Math.ceil(total / limit),
       },
-    });
+    };
   }
   // 상세 조회
   findOne(id: number) {
@@ -42,15 +54,27 @@ export class PostsService {
         author: {
           select: { email: true, nickname: true },
         },
+        comments: {
+          include: {
+            author: {
+              select: { nickname: true },
+            },
+          },
+        },
       },
     });
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    return this.prisma.post.update({
+      where: { id },
+      data: updatePostDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: number) {
+    return this.prisma.post.delete({
+      where: { id },
+    });
   }
 }
